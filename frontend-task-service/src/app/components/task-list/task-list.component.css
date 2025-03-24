@@ -1,0 +1,50 @@
+/* Estilos para la tabla de tareas */
+.task-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Estilos para las cabeceras */
+.task-table th {
+  background-color: #f4f4f4;
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+  font-weight: bold;
+}
+
+/* Estilos para las filas */
+.task-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+/* Color alternado en las filas para mejor visualización */
+.task-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Efecto hover para las filas */
+.task-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Estilo para los botones */
+button {
+  padding: 5px 10px;
+  margin: 2px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Estilos individuales para botones */
+button:hover {
+  opacity: 0.9;
+}
+button:nth-child(1) { background-color: #4CAF50; color: white; } /* Editar */
+button:nth-child(2) { background-color: #f44336; color: white; } /* Eliminar */
+button:nth-child(4) { background-color: #008CBA; color: white; } /* Asignar */

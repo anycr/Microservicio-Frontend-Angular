@@ -1,0 +1,52 @@
+<h2>Lista de Tareas</h2>
+<table class="task-table">
+    <thead>
+        <tr>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Estado</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Límite</th>
+            <th>Asignado a</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let task of tasks">
+            <td>{{ task.title }}</td>
+            <td>{{ task.description }}</td>
+            <td>{{ task.status }}</td>
+            <td>
+                <ng-container *ngIf="task.dueDate">
+                    {{ task.dueDate | date:'shortDate' }}
+                </ng-container>
+            </td>
+            <td>{{ task.assignedTo || 'Sin asignar' }}</td>
+            <td>
+                <button (click)="editTask(task)">Editar</button>
+                <button (click)="deleteTask(task.id)">Eliminar</button><br><br>
+                
+                <input type="text" [(ngModel)]="assignedUser" placeholder="Nombre de usuario">
+                <button (click)="assignTask(task.id, assignedUser)">Asignar</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>Crear Tarea</h2>
+<div>
+    <label>Título: <input type="text" [(ngModel)]="newTask.title"></label><br>
+    <label>Descripción: <input type="text" [(ngModel)]="newTask.description"></label><br>
+    <label>Fecha de Vencimiento:  
+        <input type="date" 
+               [ngModel]="newTask.dueDate | date:'yyyy-MM-dd'" 
+               (ngModelChange)="onDueDateChange($event)">
+    </label><br>
+    <label>Estado:
+        <select [(ngModel)]="newTask.status">
+            <option *ngFor="let status of taskStatuses" [ngValue]="status">{{ status }}</option>
+        </select>
+    </label><br>
+    <label>Asignado a: <input type="text" [(ngModel)]="newTask.assignedTo"></label><br>
+    <button (click)="createTask()">Crear Tarea</button>
+</div>
