@@ -26,6 +26,8 @@ export class TaskListComponent implements OnInit {
     editingTask: Task | null = null;
     assignedUser: string = '';
     taskStatuses = Object.values(TaskStatus); // ¡Asegúrate de tener esto!
+    selectedTask: Task | null = null;
+    statusFilter: string = '';
 
 
     constructor(private taskService: TaskService) { }
@@ -38,6 +40,7 @@ export class TaskListComponent implements OnInit {
         this.loadTasks();
     }
 
+    //Obtener todas las tareas
     loadTasks() {
         this.taskService.getAllTasks().subscribe({
             next: (tasks: Task[]) => {
@@ -50,7 +53,7 @@ export class TaskListComponent implements OnInit {
         });
     }
     
-
+    //Crear tarea
     createTask() {
         const taskToSend = {
             title: this.newTask.title,
@@ -74,11 +77,12 @@ export class TaskListComponent implements OnInit {
         });
     }
     
-
+    
     editTask(task: Task) {
         this.editingTask = { ...task, dueDate: task.dueDate ? new Date(task.dueDate) : undefined }; 
     }
    
+    //Actualizar la tarea
     updateTask() {
         if (this.editingTask) {
             const taskToUpdate: Task = { // 👈 Explicitamente del tipo 'Task'
@@ -108,6 +112,7 @@ export class TaskListComponent implements OnInit {
         }
     } 
 
+    //Eliminar la tarea
     deleteTask(id: number) { //Ya es number
         this.taskService.deleteTask(id).subscribe({
             next: () => {
@@ -117,6 +122,7 @@ export class TaskListComponent implements OnInit {
         });
     }
 
+    //Asignar la tarea
     assignTask(taskId: number, username: string): void { //Ya es number
         this.taskService.assignTask(taskId, username).subscribe({
             next: (updatedTask: Task) => {
@@ -132,6 +138,36 @@ export class TaskListComponent implements OnInit {
         });
     }
 
+    // Obtener tarea por ID
+    getTaskById(id: number) {
+        this.taskService.getTaskById(id).subscribe((task) => {
+        this.selectedTask = task;
+        console.log('Tarea obtenida:', task);
+        });
+    }
+
+    // Consultar tareas por status
+    getTasksByStatus(status: string) {
+        this.taskService.getTasksByStatus(status).subscribe({
+            next: (tasks) => {
+                console.log(`🟢 Tareas con estado ${status}:`, tasks);
+                this.tasks = tasks;
+            },
+            error: (error) => {
+                console.error(`🔴 Error al filtrar por ${status}:`, error);
+            }
+        });
+    }
+
+    filterTasks() {
+        if (this.statusFilter) {
+            const normalizedStatus = this.statusFilter.toLowerCase(); // O ajusta según sea necesario
+            this.getTasksByStatus(normalizedStatus);
+        } else {
+            this.loadTasks();
+        }
+    }
+
     // Métodos para manejar el cambio de fecha (¡MUY IMPORTANTE!)
     onDueDateChange(event: any): void {
         this.newTask.dueDate = event ? new Date(event) : new Date();
@@ -142,4 +178,13 @@ export class TaskListComponent implements OnInit {
             this.editingTask.dueDate = event ? new Date(event) : new Date();
         }
     }
+
+    // task-list.component.ts
+    showForm: boolean = false;
+
+    toggleForm() {
+        this.showForm = !this.showForm;
+    }
+
+    
 }

@@ -1,40 +1,9 @@
-<h2>Lista de Tareas</h2>
-<table class="task-table">
-    <thead>
-        <tr>
-            <th>Título</th>
-            <th>Descripción</th>
-            <th>Estado</th>
-            <th>Fecha Inicio</th>
-            <th>Fecha Límite</th>
-            <th>Asignado a</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let task of tasks">
-            <td>{{ task.title }}</td>
-            <td>{{ task.description }}</td>
-            <td>{{ task.status }}</td>
-            <td>
-                <ng-container *ngIf="task.dueDate">
-                    {{ task.dueDate | date:'shortDate' }}
-                </ng-container>
-            </td>
-            <td>{{ task.assignedTo || 'Sin asignar' }}</td>
-            <td>
-                <button (click)="editTask(task)">Editar</button>
-                <button (click)="deleteTask(task.id)">Eliminar</button><br><br>
-                
-                <input type="text" [(ngModel)]="assignedUser" placeholder="Nombre de usuario">
-                <button (click)="assignTask(task.id, assignedUser)">Asignar</button>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<button (click)="toggleForm()">
+    {{ showForm ? 'Cancelar' : 'Crear Nueva Tarea' }}
+</button>
 
-<h2>Crear Tarea</h2>
-<div>
+<div *ngIf="showForm" style="margin-top: 20px;">
+    <h2>Crear Tarea</h2>
     <label>Título: <input type="text" [(ngModel)]="newTask.title"></label><br>
     <label>Descripción: <input type="text" [(ngModel)]="newTask.description"></label><br>
     <label>Fecha de Vencimiento:  
@@ -49,4 +18,78 @@
     </label><br>
     <label>Asignado a: <input type="text" [(ngModel)]="newTask.assignedTo"></label><br>
     <button (click)="createTask()">Crear Tarea</button>
+</div>
+<br>
+<br>
+
+<h2>Lista de Tareas</h2>
+<label for="status">Filtrar por Estado:</label>
+<select id="status" [(ngModel)]="statusFilter">
+    <option value="">Todos</option>  <!-- Si es vacío, debería mostrar todo -->
+    <option *ngFor="let status of taskStatuses" [value]="status">{{ status }}</option>
+</select>
+<button (click)="filterTasks()">Filtrar</button>
+
+<table class="task-table">
+    <thead>
+        <tr>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Estado</th>
+            <th>Fecha Límite</th>
+            <th>Asignado a</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let task of tasks">
+            <td>{{ task.title }}</td>
+            <td>{{ task.description }}</td>
+            <td>{{ task.status }}</td>
+            <td>
+                <ng-container *ngIf="task.dueDate">
+                    {{ task.dueDate | date:'longDate' }}
+                </ng-container>
+            </td>
+            <td>{{ task.assignedTo || 'Sin asignar' }}</td>
+            <td>
+                <button (click)="editTask(task)">Editar</button>
+                <button (click)="deleteTask(task.id)">Eliminar</button><br><br>
+                
+                <input type="text" [(ngModel)]="assignedUser" placeholder="Nombre de usuario">
+                <button (click)="assignTask(task.id, assignedUser)">Asignar</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div *ngIf="editingTask">
+    <h2>Editar Tarea</h2>
+    <label>Título: <input type="text" [(ngModel)]="editingTask.title"></label><br>
+    <label>Descripción: <input type="text" [(ngModel)]="editingTask.description"></label><br>
+     <label>Fecha de Vencimiento: <input type="date" [ngModel]="editingTask.dueDate | date:'yyyy-MM-dd'" (ngModelChange)="onEditDateChange($event)"/></label><br>
+    <label>Estado:
+        <select [(ngModel)]="editingTask.status">
+            <option *ngFor="let status of taskStatuses" [ngValue]="status">{{ status }}</option>
+        </select>
+    </label><br>
+    <label>Asignado a: <input type="text" [(ngModel)]="editingTask.assignedTo"></label><br>
+    <button (click)="updateTask()">Actualizar Tarea</button>
+</div>
+
+<!-- Buscar por ID -->
+<label for="taskId">Buscar Tarea por ID:</label>
+<input type="number" id="taskId" #taskIdInput>
+<button (click)="getTaskById(taskIdInput.valueAsNumber)">Buscar</button>
+
+
+<!-- Mostrar tarea obtenida por ID -->
+<div *ngIf="selectedTask">
+    <h3>Tarea Obtenida por ID</h3>
+    <p><strong>ID:</strong> {{ selectedTask.id }}</p>
+    <p><strong>Título:</strong> {{ selectedTask.title }}</p>
+    <p><strong>Descripción:</strong> {{ selectedTask.description }}</p>
+    <p><strong>Estado:</strong> {{ selectedTask.status }}</p>
+    <p><strong>Fecha Límite:</strong> {{ selectedTask.dueDate | date: 'shortDate' }}</p>
+    <p><strong>Asignado a:</strong> {{ selectedTask.assignedTo || 'Sin asignar' }}</p>
 </div>
