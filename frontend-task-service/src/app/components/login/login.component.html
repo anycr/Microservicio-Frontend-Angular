@@ -1,19 +1,39 @@
-<h2>Iniciar Sesión</h2>
+<div class="login-container">
+  <div class="avatar-container">
+    <i class="fas fa-user-circle"></i> </div>
 
-<form #loginForm="ngForm" (ngSubmit)="login(loginForm)">
-  <div class="form-group">
-    <label for="username">Usuario:</label>
-    <input type="text" id="username" name="username" [(ngModel)]="credentials.username" required>
-  </div>
+  <form #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+    <div class="form-group input-group">
+      <span class="input-icon"><i class="fas fa-user"></i></span> <input
+        type="text"
+        id="username"
+        name="username"
+        [(ngModel)]="credentials.username"
+        placeholder="Username" required
+      />
+    </div>
 
-  <div class="form-group">
-    <label for="password">Contraseña:</label>
-    <input type="password" id="password" name="password" [(ngModel)]="credentials.password" required>
-  </div>
+    <div class="form-group input-group">
+      <span class="input-icon"><i class="fas fa-lock"></i></span> <input
+        type="password"
+        id="password"
+        name="password"
+        [(ngModel)]="credentials.password"
+        placeholder="Password" required
+      />
+    </div>
 
-  <div *ngIf="errorMessage" class="error-message">
-    {{ errorMessage }}
-  </div>
+    <div class="form-options">
+      <label class="remember-me">
+        <input type="checkbox" name="rememberMe"> Remember me
+      </label>
+      <a href="#" class="forgot-password">Forgot Password?</a>
+    </div>
 
-  <button type="submit" [disabled]="!loginForm.valid">Iniciar Sesión</button>
-</form>
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <button type="submit" [disabled]="!loginForm.valid">LOGIN</button>
+  </form>
+</div>

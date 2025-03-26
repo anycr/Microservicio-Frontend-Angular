@@ -1,0 +1,141 @@
+/* src/app/components/login/login.component.css */
+:host {
+    display: flex; /* Usa flexbox para centrar el .login-container */
+    justify-content: center;
+    align-items: center;
+    width: 100%;  /* Ocupa todo el ancho disponible */
+    min-height: 100vh; /* Ocupa toda la altura de la ventana */
+  
+    /* Elige UNA de estas opciones de fondo */
+  
+    /*  Imagen  */
+    background-image: url('../../../../images/fondo-Login.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  
+  }
+  
+.login-container {
+    max-width: 400px; /* Un poco más ancho */
+    margin: 50px auto; /* Centrar horizontalmente y agregar margen superior/inferior */
+    padding: 50px 40px; /* Más padding */
+    background-color: rgba(40, 40, 80, 0.6); /* Fondo oscuro semi-transparente (ajusta color) */
+    border-radius: 20px; /* Bordes muy redondeados */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    color: #aba0df; /* Texto general claro */
+  }
+  
+  .avatar-container {
+    margin-bottom: 25px;
+
+  }
+  
+  .avatar-container i {
+    font-size: 60px; /* Tamaño del icono de avatar */
+    color: rgba(255, 255, 255, 0.7); /* Color del avatar */
+  }
+  
+  h2 {
+    /* Si decides añadir un título, estilízalo aquí */
+    display: none; /* Oculta el título "USER LOGIN" que teníamos antes */
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+    position: relative; /* Necesario para posicionar el icono */
+  }
+  
+  /* Estilo para el contenedor del icono y el input */
+  .input-group {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.1); /* Fondo muy sutil para el input */
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Borde sutil */
+  }
+  
+  .input-icon {
+    padding: 12px 15px; /* Espacio alrededor del icono */
+    color: rgba(255, 255, 255, 0.7); /* Color del icono */
+    min-width: 45px; /* Ancho mínimo para el icono */
+    text-align: center;
+  }
+  
+  .form-group input {
+    flex-grow: 1; /* El input ocupa el espacio restante */
+    padding: 12px 15px 12px 0; /* Ajusta padding (sin padding izquierdo) */
+    border: none; /* Sin borde en el input mismo */
+    border-radius: 0 8px 8px 0; /* Redondeo solo a la derecha */
+    background-color: transparent; /* Input transparente */
+    color: #fff; /* Texto del input blanco */
+    font-size: 16px;
+    outline: none; /* Quita el borde azul al enfocar */
+  }
+  
+  /* Estilo para el placeholder */
+  .form-group input::placeholder {
+    color: rgba(255, 255, 255, 0.5); /* Color del placeholder */
+  }
+  
+  /* Sección "Remember me" y "Forgot Password?" */
+  .form-options {
+    display: flex;
+    justify-content: space-between; /* Espacio entre los elementos */
+    align-items: center;
+    margin-bottom: 25px;
+    font-size: 14px;
+  }
+  
+  .remember-me {
+    display: flex;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.8);
+  }
+  
+  .remember-me input[type="checkbox"] {
+    margin-right: 8px;
+  }
+  
+  .forgot-password {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+  }
+  
+  .forgot-password:hover {
+    text-decoration: underline;
+  }
+  
+  
+  button {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(90deg, #5178e9 0%, #8a60e8 100%); /* Degradado azul/morado */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 15px;
+    transition: opacity 0.3s ease;
+  }
+  
+  button:disabled {
+    background: #777;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  
+  button:hover:not(:disabled) {
+    opacity: 0.9; /* Ligera transparencia al pasar el mouse */
+  }
+  
+  .error-message {
+    color: #ff8a80; /* Rojo claro para errores */
+    margin-top: 15px;
+    font-size: 14px;
+    font-weight: bold;
+  }
