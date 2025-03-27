@@ -31,6 +31,7 @@ export class TaskListComponent implements OnInit {
     successMessage: string = '';    // ✅ Mensaje de éxito
     errorMessageCrear: string = '';      // ✅ Mensaje de error Crear
     errorMessageEditar: string = '';      // ✅ Mensaje de error Editar
+    errorMessageID: string = '';      // ✅ Mensaje de error ID
     
 
 
@@ -144,6 +145,7 @@ export class TaskListComponent implements OnInit {
     clearErrorMessage() {
         this.errorMessageEditar = '';
         this.errorMessageCrear = '';
+        this.errorMessageID = '';
     }
  
     //cancelar la edición
@@ -178,11 +180,34 @@ export class TaskListComponent implements OnInit {
     }
 
     // Obtener tarea por ID
-    getTaskById(id: number) {
-        this.taskService.getTaskById(id).subscribe((task) => {
-        this.selectedTask = task;
-        console.log('Tarea obtenida:', task);
+    getTaskById(id: number, inputElement: HTMLInputElement) {
+        if (isNaN(id) || id <= 0) {
+            this.errorMessageID = '⚠️ Ingresa un ID válido.';
+            this.selectedTask = null;
+            setTimeout(() => this.clearErrorMessage(), 4000);
+            return;
+        }
+    
+        this.taskService.getTaskById(id).subscribe({
+            next: (task) => {
+                this.selectedTask = task;
+                console.log('Tarea obtenida:', task);
+            },
+            error: (error) => {
+                console.error('❌ Error al obtener la tarea:', error);
+                this.errorMessageID = '⚠️ No se encontró la tarea con el ID proporcionado.';
+                this.selectedTask = null;
+                setTimeout(() => this.clearErrorMessage(), 4000);
+            },
+            complete: () => {
+                inputElement.value = ''; // ✅ Limpia el input después de la búsqueda
+            }
         });
+    }
+
+    //cancelar la edición
+    clearTaskByID() {
+        this.selectedTask = null; // Oculta el formulario y limpia el estado
     }
 
     // Consultar tareas por status
@@ -218,7 +243,6 @@ export class TaskListComponent implements OnInit {
         }
     }
 
-    // task-list.component.ts
     showForm: boolean = false;
 
     toggleForm() {

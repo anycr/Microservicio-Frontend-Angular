@@ -239,6 +239,16 @@ label {
   background-color: #d32f2f;
 }
 
+/* Botón de Limpiar (Amarillo) */
+.btn-danger {
+  background-color: #f0e00a;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #c0b844;
+}
+
 /* Mensaje de Éxito */
 .success-message {
   background-color: #d4edda;

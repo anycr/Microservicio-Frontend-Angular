@@ -3,4 +3,34 @@ body, html {
     height: 100%;
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Cambiado de center a flex-start */
+    min-height: 100vh;
   }
+
+header {
+    background-color: black; /* Color de fondo del encabezado */
+    color: white; /* Color del texto */
+    padding: 20px; /* Espaciado interno */
+    text-align: center; /* Alinear texto al centro */
+    width: 100%; /* Ocupar todo el ancho de la página */
+    position: fixed; /* Fijar el encabezado */
+    top: 0; /* Pegar el encabezado en la parte superior */
+    left: 0; /* Alinear el encabezado a la izquierda */
+    z-index: 1000; /* Asegurar que el encabezado esté en la capa superior */
+}
+
+footer {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    margin-top: 20px; /* Agrega un margen superior para separarlo del contenido */
+}
