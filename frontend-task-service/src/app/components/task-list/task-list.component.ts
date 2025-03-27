@@ -28,6 +28,10 @@ export class TaskListComponent implements OnInit {
     taskStatuses = Object.values(TaskStatus); // ¡Asegúrate de tener esto!
     selectedTask: Task | null = null;
     statusFilter: string = '';
+    successMessage: string = '';    // ✅ Mensaje de éxito
+    errorMessageCrear: string = '';      // ✅ Mensaje de error Crear
+    errorMessageEditar: string = '';      // ✅ Mensaje de error Editar
+    
 
 
     constructor(private taskService: TaskService) { }
@@ -55,6 +59,11 @@ export class TaskListComponent implements OnInit {
     
     //Crear tarea
     createTask() {
+        if (this.newTask.title.trim() === '') {
+            this.errorMessageCrear = '⚠️ El título de la tarea es obligatorio.';
+            return;
+        }
+
         const taskToSend = {
             title: this.newTask.title,
             description: this.newTask.description,
@@ -70,11 +79,22 @@ export class TaskListComponent implements OnInit {
                 console.log("✅ Tarea creada:", newTask);
                 this.tasks.push(newTask);
                 this.newTask = { id: 0, title: '', description: '', status: TaskStatus.PENDIENTE, dueDate: new Date(), assignedTo: '' };
+                
+                this.successMessage = '✅ ¡La tarea se creó exitosamente!';
+                this.errorMessageCrear = ''; // ✅ Limpia el error si había uno
+                setTimeout(() => this.clearSuccessMessage(), 4000); // ✅ Limpia el mensaje después de 4s
             },
             error: (error: any) => {
                 console.error("❌ Error al crear la tarea:", error);
+                this.errorMessageCrear = '⚠️ No se pudo crear la tarea. Inténtalo de nuevo.';
             }
+
         });
+    }
+    
+    // Método para limpiar el mensaje de éxito manualmente
+    clearSuccessMessage() {
+        this.successMessage = '';
     }
     
     
@@ -102,15 +122,34 @@ export class TaskListComponent implements OnInit {
                     const index = this.tasks.findIndex(t => t.id === updatedTask.id);
                     if (index !== -1) {
                         this.tasks[index] = { ...updatedTask };
+                        this.errorMessageEditar = ''; // ✅ Limpia el mensaje de error si se actualiza
                     }
                     this.editingTask = null; // Resetea el estado de edición
                 },
                 error: (error: any) => {
                     console.error("❌ Error al actualizar la tarea:", error);
+                     // ✅ Si el backend devuelve un mensaje específico, úsalo
+                     if (error?.error?.message) {
+                        this.errorMessageEditar = `⚠️ ${error.error.message}`;
+                    } else {
+                        // ✅ Mensaje genérico si no hay detalles
+                        this.errorMessageEditar = '⚠️ No se pudo actualizar la tarea. Verifica el estado.';
+                    }
                 }
             });
         }
     } 
+
+    // Método para limpiar el mensaje manualmente si es necesario
+    clearErrorMessage() {
+        this.errorMessageEditar = '';
+        this.errorMessageCrear = '';
+    }
+ 
+    //cancelar la edición
+    cancelEdit() {
+        this.editingTask = null; // Oculta el formulario y limpia el estado
+    }
 
     //Eliminar la tarea
     deleteTask(id: number) { //Ya es number

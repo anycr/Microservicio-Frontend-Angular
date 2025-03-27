@@ -1,3 +1,4 @@
+<h1>Gestor de tareas</h1>
 <button (click)="toggleForm()">
     {{ showForm ? 'Cancelar' : 'Crear Nueva Tarea' }}
 </button>
@@ -21,6 +22,17 @@
 </div>
 <br>
 <br>
+
+<!-- Mensaje de Éxito -->
+<div *ngIf="successMessage" class="success-message">
+    <p>{{ successMessage }}</p>
+    <button (click)="clearSuccessMessage()">Cerrar</button>
+</div>
+<!-- Mensaje de Error -->
+<div *ngIf="errorMessageCrear" class="error-message">
+    <p>{{ errorMessageCrear }}</p>
+    <button (click)="clearErrorMessage()">Cerrar</button>
+</div>
 
 <h2>Lista de Tareas</h2>
 <label for="status">Filtrar por Estado:</label>
@@ -53,28 +65,43 @@
             </td>
             <td>{{ task.assignedTo || 'Sin asignar' }}</td>
             <td>
-                <button (click)="editTask(task)">Editar</button>
-                <button (click)="deleteTask(task.id)">Eliminar</button><br><br>
+                <button (click)="editTask(task)" class="edit-button">Editar</button>
+                <button (click)="deleteTask(task.id)" class="delete-button">Eliminar</button><br><br>
                 
                 <input type="text" [(ngModel)]="assignedUser" placeholder="Nombre de usuario">
-                <button (click)="assignTask(task.id, assignedUser)">Asignar</button>
+                <button (click)="assignTask(task.id, assignedUser)" class="assign-button">Asignar</button>
             </td>
         </tr>
     </tbody>
 </table>
 
-<div *ngIf="editingTask">
+<div *ngIf="editingTask" style="margin-top: 20px;">
     <h2>Editar Tarea</h2>
     <label>Título: <input type="text" [(ngModel)]="editingTask.title"></label><br>
     <label>Descripción: <input type="text" [(ngModel)]="editingTask.description"></label><br>
-     <label>Fecha de Vencimiento: <input type="date" [ngModel]="editingTask.dueDate | date:'yyyy-MM-dd'" (ngModelChange)="onEditDateChange($event)"/></label><br>
+    <label>Fecha de Vencimiento:  
+        <input type="date" 
+               [ngModel]="editingTask.dueDate | date:'yyyy-MM-dd'" 
+               (ngModelChange)="onEditDateChange($event)">
+    </label><br>
     <label>Estado:
         <select [(ngModel)]="editingTask.status">
             <option *ngFor="let status of taskStatuses" [ngValue]="status">{{ status }}</option>
         </select>
     </label><br>
     <label>Asignado a: <input type="text" [(ngModel)]="editingTask.assignedTo"></label><br>
-    <button (click)="updateTask()">Actualizar Tarea</button>
+    
+    <!-- Botón de Actualizar -->
+    <button (click)="updateTask()" class="btn btn-success">Actualizar Tarea</button>
+
+    <!-- Botón de Cancelar -->
+    <button (click)="cancelEdit()" class="btn btn-danger" style="margin-left: 10px;">Cancelar</button>
+</div>
+
+<!-- Mensaje de Error -->
+<div *ngIf="errorMessageEditar" class="error-message">
+    <p>{{ errorMessageEditar }}</p>
+    <button (click)="clearErrorMessage()">Cerrar</button>
 </div>
 
 <!-- Buscar por ID -->

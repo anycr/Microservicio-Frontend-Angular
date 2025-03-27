@@ -1,50 +1,284 @@
-/* Estilos para la tabla de tareas */
-.task-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  font-family: Arial, sans-serif;
+:host {
+  display: block;
+  padding: 20px 40px;
+  max-width: 1300px;
+  margin: 20px auto;
+  font-family: sans-serif;
+  background-color: #f8f9fa;
+  border-radius: 8px;
 }
 
-/* Estilos para las cabeceras */
-.task-table th {
-  background-color: #f4f4f4;
-  padding: 10px;
-  text-align: left;
-  border: 1px solid #ddd;
-  font-weight: bold;
+h1 {
+  text-align: center;
+  color: #343a40;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #dee2e6;
+  padding-bottom: 15px;
 }
 
-/* Estilos para las filas */
-.task-table td {
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: left;
+h2 {
+  color: #495057;
+  margin-top: 30px;
+  margin-bottom: 15px;
 }
 
-/* Color alternado en las filas para mejor visualización */
-.task-table tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-/* Efecto hover para las filas */
-.task-table tr:hover {
-  background-color: #f1f1f1;
-}
-
-/* Estilo para los botones */
-button {
-  padding: 5px 10px;
-  margin: 2px;
+/* Botón Crear/Cancelar */
+:host > button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 18px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 5px;
 }
 
-/* Estilos individuales para botones */
-button:hover {
-  opacity: 0.9;
+:host > button:hover {
+  background-color: #0056b3;
 }
-button:nth-child(1) { background-color: #4CAF50; color: white; } /* Editar */
-button:nth-child(2) { background-color: #f44336; color: white; } /* Eliminar */
-button:nth-child(4) { background-color: #008CBA; color: white; } /* Asignar */
+
+/* Estilo para el botón "Crear Tarea" */
+button {
+  background-color: #4CAF50; /* Verde */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+/* Hover y efecto de clic */
+button:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+
+button:active {
+  background-color: #388e3c;
+  transform: scale(0.95);
+}
+
+/* Estilo del formulario */
+div[style*="margin-top: 20px;"] {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo de los inputs */
+input[type="text"],
+input[type="date"],
+select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+/* Estilo de los labels */
+label {
+  font-weight: bold;
+  margin-top: 10px;
+  display: block;
+}
+
+
+/* Sección de Filtro */
+.filter-section button {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.filter-section button:hover {
+  background-color: #138496;
+}
+
+/* Tabla de Tareas */
+.task-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.task-table thead {
+  background-color: #e9ecef;
+}
+
+.task-table th, .task-table td {
+  border: 1px solid #dee2e6;
+  padding: 12px 15px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.task-table th {
+  font-weight: 600;
+  color: #495057;
+}
+
+.task-table tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.task-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Botones de Acción - Estilo Diferenciado */
+.task-table td button.edit-button {
+  background-color: #17a2b8; /* Azul claro */
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.task-table td button.edit-button:hover {
+  background-color: #138496;
+  transform: scale(1.05);
+}
+
+/* Botón Eliminar */
+.task-table td button.delete-button {
+  background-color: #dc3545; /* Rojo */
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.task-table td button.delete-button:hover {
+  background-color: #c82333;
+  transform: scale(1.05);
+}
+
+/* Botón Asignar */
+.task-table td button.assign-button {
+  background-color: #28a745; /* Verde */
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.task-table td button.assign-button:hover {
+  background-color: #218838;
+  transform: scale(1.05);
+}
+
+/* Input dentro de las acciones */
+.task-table td input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+  box-sizing: border-box;
+}
+
+/* Espaciado entre botones */
+.task-table td button {
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+/* Estilo para los botones */
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+/* Botón de Actualizar (verde) */
+.btn-success {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: #45a049;
+}
+
+/* Botón de Cancelar (rojo) */
+.btn-danger {
+  background-color: #f44336;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #d32f2f;
+}
+
+/* Mensaje de Éxito */
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
+  border: 1px solid #c3e6cb;
+}
+.success-message button {
+  background-color: #155724;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 5px;
+}
+.success-message button:hover {
+  background-color: #19692c;
+}
+
+/* Mensaje de Error */
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
+  border: 1px solid #f5c6cb;
+}
+.error-message button {
+  background-color: #721c24;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 5px;
+}
+.error-message button:hover {
+  background-color: #a71d2a;
+}
