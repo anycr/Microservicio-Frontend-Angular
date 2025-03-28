@@ -85,9 +85,15 @@ export class TaskListComponent implements OnInit {
                 this.errorMessageCrear = ''; // ✅ Limpia el error si había uno
                 setTimeout(() => this.clearSuccessMessage(), 4000); // ✅ Limpia el mensaje después de 4s
             },
-            error: (error: any) => {
+            error: (error: any) => { // Manejo de errores mejorado
                 console.error("❌ Error al crear la tarea:", error);
-                this.errorMessageCrear = '⚠️ No se pudo crear la tarea. Inténtalo de nuevo.';
+                if (error.status === 400 && error.error?.message) {
+                    // Muestra el mensaje específico del backend para errores 400
+                    this.errorMessageCrear = `⚠️ ${error.error.message}`;
+                } else {
+                    // Mensaje genérico para otros errores
+                    this.errorMessageCrear = '⚠️ No se pudo crear la tarea. Inténtalo de nuevo.';
+                }
             }
 
         });

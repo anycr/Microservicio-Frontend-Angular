@@ -7,10 +7,8 @@
     <h2>Crear Tarea</h2>
     <label>Título: <input type="text" [(ngModel)]="newTask.title"></label><br>
     <label>Descripción: <input type="text" [(ngModel)]="newTask.description"></label><br>
-    <label>Fecha de Vencimiento:  
-        <input type="date" 
-               [ngModel]="newTask.dueDate | date:'yyyy-MM-dd'" 
-               (ngModelChange)="onDueDateChange($event)">
+    <label>Fecha de Vencimiento:
+        <input type="datetime-local" [ngModel]="newTask.dueDate | date:'yyyy-MM-ddTHH:mm'" (ngModelChange)="onDueDateChange($event)">
     </label><br>
     <label>Estado:
         <select [(ngModel)]="newTask.status">
@@ -59,10 +57,12 @@
             <td>{{ task.id }}</td>
             <td>{{ task.title }}</td>
             <td>{{ task.description }}</td>
-            <td>{{ task.status }}</td>
+            <td><span class="status-badge" [ngClass]="'status-' + task.status">
+                {{ task.status }}
+            </span></td>
             <td>
                 <ng-container *ngIf="task.dueDate">
-                    {{ task.dueDate | date:'longDate' }}
+                    {{ task.dueDate | date:'medium' }}
                 </ng-container>
             </td>
             <td>{{ task.assignedTo || 'Sin asignar' }}</td>
@@ -74,6 +74,9 @@
                 <button (click)="assignTask(task.id, assignedUser)" class="assign-button">Asignar</button>
             </td>
         </tr>
+        <tr *ngIf="tasks.length === 0">
+            <td colspan="8" style="text-align: center;">No hay tareas que mostrar.</td>
+         </tr>
     </tbody>
 </table>
 
@@ -81,10 +84,8 @@
     <h2>Editar Tarea</h2>
     <label>Título: <input type="text" [(ngModel)]="editingTask.title"></label><br>
     <label>Descripción: <input type="text" [(ngModel)]="editingTask.description"></label><br>
-    <label>Fecha de Vencimiento:  
-        <input type="date" 
-               [ngModel]="editingTask.dueDate | date:'yyyy-MM-dd'" 
-               (ngModelChange)="onEditDateChange($event)">
+    <label>Fecha de Vencimiento:
+        <input type="datetime-local" [ngModel]="editingTask.dueDate | date:'yyyy-MM-ddTHH:mm'" (ngModelChange)="onEditDateChange($event)" />
     </label><br>
     <label>Estado:
         <select [(ngModel)]="editingTask.status">
@@ -107,22 +108,24 @@
 </div>
 
 <!-- Buscar por ID -->
-<label for="taskId">Buscar Tarea por ID:</label>
-<input type="number" id="taskId" #taskIdInput>
-<button (click)="getTaskById(taskIdInput.valueAsNumber, taskIdInput)">Buscar</button>
+<div class="card">
+    <label for="taskId">Buscar Tarea por ID:</label>
+    <input type="number" id="taskId" #taskIdInput>
+    <button (click)="getTaskById(taskIdInput.valueAsNumber, taskIdInput)">Buscar</button>
 
 
-<!-- Mostrar tarea obtenida por ID -->
-<div *ngIf="selectedTask">
-    <h3>Tarea Obtenida por ID</h3>
-    <p><strong>ID:</strong> {{ selectedTask.id }}</p>
-    <p><strong>Título:</strong> {{ selectedTask.title }}</p>
-    <p><strong>Descripción:</strong> {{ selectedTask.description }}</p>
-    <p><strong>Estado:</strong> {{ selectedTask.status }}</p>
-    <p><strong>Fecha Límite:</strong> {{ selectedTask.dueDate | date: 'shortDate' }}</p>
-    <p><strong>Asignado a:</strong> {{ selectedTask.assignedTo || 'Sin asignar' }}</p>
-     <!-- Botón de Cancelar -->
-     <button (click)="clearTaskByID()" class="btn btn-danger" style="margin-left: 10px;">Limpiar</button>
+    <!-- Mostrar tarea obtenida por ID -->
+    <div *ngIf="selectedTask">
+        <h3>Tarea Obtenida por ID</h3>
+        <p><strong>ID:</strong> {{ selectedTask.id }}</p>
+        <p><strong>Título:</strong> {{ selectedTask.title }}</p>
+        <p><strong>Descripción:</strong> {{ selectedTask.description }}</p>
+        <p><strong>Estado:</strong> {{ selectedTask.status }}</p>
+        <p><strong>Fecha Límite:</strong> {{ selectedTask.dueDate | date: 'shortDate' }}</p>
+        <p><strong>Asignado a:</strong> {{ selectedTask.assignedTo || 'Sin asignar' }}</p>
+        <!-- Botón de Cancelar -->
+        <button (click)="clearTaskByID()" class="btn btn-danger" style="margin-left: 10px;">Limpiar</button>
+    </div>
 </div>
 
 <div>
