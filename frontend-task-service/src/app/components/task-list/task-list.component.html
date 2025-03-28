@@ -32,53 +32,95 @@
     <button (click)="clearErrorMessage()">Cerrar</button>
 </div>
 
-<h2>Lista de Tareas</h2>
-<label for="status">Filtrar por Estado:</label>
-<select id="status" [(ngModel)]="statusFilter">
-    <option value="">Todos</option>  <!-- Si es vacío, debería mostrar todo -->
-    <option *ngFor="let status of taskStatuses" [value]="status">{{ status }}</option>
-</select>
-<button (click)="filterTasks()">Filtrar</button>
-
-<table class="task-table">
+<div class="search-filter-section">
+    <label for="searchTerm">Buscar por ID o Estado:</label>
+    <input type="text" id="searchTerm" [(ngModel)]="searchTerm" placeholder="ID o Estado (ej: PENDIENTE)">
+    <button (click)="searchOrFilter()">Buscar / Filtrar</button>
+    <button (click)="resetSearch()">Mostrar Todos</button> </div>
+  
+  <table class="task-table">
     <thead>
-        <tr>
-            <th>Id</th>
-            <th>Título</th>
-            <th>Descripción</th>
-            <th>Estado</th>
-            <th>Fecha Límite</th>
-            <th>Asignado a</th>
-            <th>Acciones</th>
-        </tr>
+      <tr>
+        <th>Id</th>
+        <th>Título</th>
+        <th>Descripción</th>
+        <th>Estado</th>
+        <th>Fecha Límite</th>
+        <th>Asignado a</th>
+        <th>Acciones</th>
+      </tr>
     </thead>
     <tbody>
+      <ng-container *ngIf="selectedTask">
+         <tr>
+           <td>{{ selectedTask.id }}</td>
+           <td>{{ selectedTask.title }}</td>
+           <td>{{ selectedTask.description }}</td>
+           <td>
+               <span class="status-badge" [ngClass]="'status-' + selectedTask.status">
+                  {{ selectedTask.status }}
+               </span>
+           </td>
+           <td>
+                <ng-container *ngIf="selectedTask.dueDate">
+                   {{ selectedTask.dueDate | date:'shortDate' }}
+                </ng-container>
+           </td>
+           <td>{{ selectedTask.assignedTo || 'Sin asignar' }}</td>
+           <td class="actions-cell">
+            <button class="icon-button edit-button" (click)="editTask(selectedTask)" title="Editar">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="icon-button delete-button" (click)="deleteTask(selectedTask.id)" title="Eliminar">
+              <i class="fas fa-trash"></i>
+            </button>
+            <div class="assign-group">
+              <input type="text" [(ngModel)]="assignUsernames[selectedTask.id]" placeholder="Usuario">
+              <button class="assign-button" (click)="assignTask(selectedTask.id, assignUsernames[selectedTask.id])" title="Asignar">
+                <i class="fas fa-user-plus"></i>
+              </button>
+            </div>
+            </td>
+         </tr>
+      </ng-container>
+  
+      <ng-container *ngIf="!selectedTask">
         <tr *ngFor="let task of tasks">
             <td>{{ task.id }}</td>
             <td>{{ task.title }}</td>
             <td>{{ task.description }}</td>
-            <td><span class="status-badge" [ngClass]="'status-' + task.status">
-                {{ task.status }}
-            </span></td>
+            <td>
+               <span class="status-badge" [ngClass]="'status-' + task.status">
+                   {{ task.status }}
+               </span>
+            </td>
             <td>
                 <ng-container *ngIf="task.dueDate">
                     {{ task.dueDate | date:'medium' }}
                 </ng-container>
             </td>
             <td>{{ task.assignedTo || 'Sin asignar' }}</td>
-            <td>
-                <button (click)="editTask(task)" class="edit-button">Editar</button>
-                <button (click)="deleteTask(task.id)" class="delete-button">Eliminar</button><br><br>
-                
-                <input type="text" [(ngModel)]="assignedUser" placeholder="Nombre de usuario">
-                <button (click)="assignTask(task.id, assignedUser)" class="assign-button">Asignar</button>
-            </td>
+          <td class="actions-cell">
+              <button class="icon-button edit-button" (click)="editTask(task)" title="Editar">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="icon-button delete-button" (click)="deleteTask(task.id)" title="Eliminar">
+                <i class="fas fa-trash"></i>
+              </button>
+              <div class="assign-group">
+                <input type="text" [(ngModel)]="assignUsernames[task.id]" placeholder="Usuario">
+                <button class="assign-button" (click)="assignTask(task.id, assignUsernames[task.id])" title="Asignar">
+                  <i class="fas fa-user-plus"></i>
+                </button>
+              </div>
+          </td>
         </tr>
         <tr *ngIf="tasks.length === 0">
-            <td colspan="8" style="text-align: center;">No hay tareas que mostrar.</td>
-         </tr>
+            <td colspan="7" style="text-align: center;">No hay tareas que coincidan con la búsqueda/filtro.</td>
+        </tr>
+      </ng-container>
     </tbody>
-</table>
+  </table>
 
 <div *ngIf="editingTask" style="margin-top: 20px;">
     <h2>Editar Tarea</h2>
@@ -107,26 +149,6 @@
     <button (click)="clearErrorMessage()">Cerrar</button>
 </div>
 
-<!-- Buscar por ID -->
-<div class="card">
-    <label for="taskId">Buscar Tarea por ID:</label>
-    <input type="number" id="taskId" #taskIdInput>
-    <button (click)="getTaskById(taskIdInput.valueAsNumber, taskIdInput)">Buscar</button>
-
-
-    <!-- Mostrar tarea obtenida por ID -->
-    <div *ngIf="selectedTask">
-        <h3>Tarea Obtenida por ID</h3>
-        <p><strong>ID:</strong> {{ selectedTask.id }}</p>
-        <p><strong>Título:</strong> {{ selectedTask.title }}</p>
-        <p><strong>Descripción:</strong> {{ selectedTask.description }}</p>
-        <p><strong>Estado:</strong> {{ selectedTask.status }}</p>
-        <p><strong>Fecha Límite:</strong> {{ selectedTask.dueDate | date: 'shortDate' }}</p>
-        <p><strong>Asignado a:</strong> {{ selectedTask.assignedTo || 'Sin asignar' }}</p>
-        <!-- Botón de Cancelar -->
-        <button (click)="clearTaskByID()" class="btn btn-danger" style="margin-left: 10px;">Limpiar</button>
-    </div>
-</div>
 
 <div>
      <br>

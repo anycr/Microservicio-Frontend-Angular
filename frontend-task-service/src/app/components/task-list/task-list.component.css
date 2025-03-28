@@ -292,3 +292,49 @@ label {
 .error-message button:hover {
   background-color: #a71d2a;
 }
+
+
+/* Sección de Búsqueda/Filtro Unificada */
+.search-filter-section {
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Espacio entre elementos */
+  padding: 15px;
+  background-color: #fff; /* Fondo blanco para destacarlo */
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.search-filter-section label {
+  font-weight: bold;
+  margin-bottom: 0; /* Sin margen inferior para el label */
+  color: #555;
+}
+
+.search-filter-section input[type="text"] {
+  flex-grow: 1; /* El input ocupa el espacio disponible */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 0; /* Sin margen inferior */
+}
+
+.search-filter-section button {
+  padding: 10px 15px;
+  margin: 0; /* Sin margen extra */
+}
+
+/* Estilo específico para el botón "Mostrar Todos" */
+.search-filter-section button:last-of-type {
+    background-color: #6c757d; /* Gris secundario */
+}
+.search-filter-section button:last-of-type:hover {
+    background-color: #5a6268;
+}
+
+/* Mensaje de error para la búsqueda */
+.search-filter-section + .error-message { /* Estilo si el mensaje de error está justo después */
+    margin-top: -15px; /* Reduce espacio superior */
+    margin-bottom: 15px;
+}

@@ -4,6 +4,7 @@ import { Task } from '../../models/task.model';
 import { TaskStatus } from '../../models/task-status.enum';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http'; // ¡Añade HttpErrorResponse aquí!
 
 @Component({
     selector: 'app-task-list',
@@ -14,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class TaskListComponent implements OnInit {
 
+    allTasks: Task[] = []; // Almacena todas las tareas originales
     tasks: Task[] = [];
     newTask: Task = {
         id: 0,  // Valor predeterminado
@@ -27,11 +29,14 @@ export class TaskListComponent implements OnInit {
     assignedUser: string = '';
     taskStatuses = Object.values(TaskStatus); // ¡Asegúrate de tener esto!
     selectedTask: Task | null = null;
-    statusFilter: string = '';
+    searchTerm: string = '';         // Nuevo: Término de búsqueda/filtro
+    searchError: string = '';      // Nuevo: Mensaje de error para la búsqueda
     successMessage: string = '';    // ✅ Mensaje de éxito
     errorMessageCrear: string = '';      // ✅ Mensaje de error Crear
     errorMessageEditar: string = '';      // ✅ Mensaje de error Editar
     errorMessageID: string = '';      // ✅ Mensaje de error ID
+    assignUsernames: { [taskId: number]: string } = {};
+    showForm: boolean = false;        // Controla visibilidad del form de creación
     
 
 
@@ -50,10 +55,14 @@ export class TaskListComponent implements OnInit {
         this.taskService.getAllTasks().subscribe({
             next: (tasks: Task[]) => {
                 console.log("📥 Tareas recibidas:", tasks); // Verifica si llega assignedTo
-                this.tasks = tasks;
+                this.allTasks = tasks; // Guarda la lista completa
+                this.tasks = [...this.allTasks]; // Muestra todas inicialmente
+                this.selectedTask = null; // Limpia la selección por ID
+                this.searchError = '';    // Limpia error de búsqueda
             },
             error: (error: any) => {
                 console.error('❌ Error al cargar tareas:', error);
+                this.searchError = 'Error al cargar las tareas.';
             }
         });
     }
@@ -78,7 +87,8 @@ export class TaskListComponent implements OnInit {
         this.taskService.createTask(taskToSend).subscribe({
             next: (newTask: Task) => {
                 console.log("✅ Tarea creada:", newTask);
-                this.tasks.push(newTask);
+                this.allTasks.push(newTask); // Añade a la lista completa
+                this.resetSearch(); // Muestra todas (incluyendo la nueva)
                 this.newTask = { id: 0, title: '', description: '', status: TaskStatus.PENDIENTE, dueDate: new Date(), assignedTo: '' };
                 
                 this.successMessage = '✅ ¡La tarea se creó exitosamente!';
@@ -126,10 +136,15 @@ export class TaskListComponent implements OnInit {
             this.taskService.updateTask(this.editingTask.id, taskToUpdate).subscribe({
                 next: (updatedTask: Task) => {
                     console.log("✅ Tarea actualizada:", updatedTask);
-                    const index = this.tasks.findIndex(t => t.id === updatedTask.id);
+                    const index = this.allTasks.findIndex(t => t.id === updatedTask.id);
                     if (index !== -1) {
-                        this.tasks[index] = { ...updatedTask };
-                        this.errorMessageEditar = ''; // ✅ Limpia el mensaje de error si se actualiza
+                        this.allTasks[index] = updatedTask; // Actualiza en la lista completa
+                        // Si se estaba mostrando solo una tarea (por ID), actualízala también
+                        if (this.selectedTask && this.selectedTask.id === updatedTask.id) {
+                            this.selectedTask = updatedTask;
+                        } else {
+                             this.searchOrFilter(); // Vuelve a aplicar filtro/búsqueda actual
+                        }
                     }
                     this.editingTask = null; // Resetea el estado de edición
                 },
@@ -163,7 +178,11 @@ export class TaskListComponent implements OnInit {
     deleteTask(id: number) { //Ya es number
         this.taskService.deleteTask(id).subscribe({
             next: () => {
-                this.tasks = this.tasks.filter(task => task.id !== id);
+                this.allTasks = this.allTasks.filter(task => task.id !== id); // Elimina de la lista completa
+                if (this.selectedTask && this.selectedTask.id === id) {
+                    this.selectedTask = null; // Limpia si se borró la tarea seleccionada
+                }
+                this.resetSearch(); // Muestra la lista actualizada
             },
             error: (error: any) => console.error('❌ Error:', error)
         });
@@ -173,70 +192,80 @@ export class TaskListComponent implements OnInit {
     assignTask(taskId: number, username: string): void { //Ya es number
         this.taskService.assignTask(taskId, username).subscribe({
             next: (updatedTask: Task) => {
-                const index = this.tasks.findIndex(t => t.id === updatedTask.id);
-                 if (index > -1) {
-                    this.tasks[index] = {
-                      ...updatedTask,
-                      dueDate: updatedTask.dueDate ? new Date(updatedTask.dueDate) : undefined
-                    };
+                const index = this.allTasks.findIndex(t => t.id === updatedTask.id);
+                if (index > -1) {
+                    this.allTasks[index] = updatedTask; // Actualiza en la lista completa
+                     if (this.selectedTask && this.selectedTask.id === updatedTask.id) {
+                            this.selectedTask = updatedTask;
+                        } else {
+                             this.searchOrFilter(); // Vuelve a aplicar filtro/búsqueda actual
+                        }
+                    this.assignUsernames[taskId] = '';
                 }
             },
             error: (error: any) => console.error('❌ Error assigning task:', error)
         });
     }
 
-    // Obtener tarea por ID
-    getTaskById(id: number, inputElement: HTMLInputElement) {
-        if (isNaN(id) || id <= 0) {
-            this.errorMessageID = '⚠️ Ingresa un ID válido.';
-            this.selectedTask = null;
-            setTimeout(() => this.clearErrorMessage(), 4000);
+    searchOrFilter() {
+        this.selectedTask = null; // Limpia selección previa
+        this.searchError = '';    // Limpia error previo
+        const term = this.searchTerm.trim();
+
+        if (!term) {
+            this.resetSearch(); // Si no hay término, muestra todo
             return;
         }
-    
-        this.taskService.getTaskById(id).subscribe({
-            next: (task) => {
-                this.selectedTask = task;
-                console.log('Tarea obtenida:', task);
-            },
-            error: (error) => {
-                console.error('❌ Error al obtener la tarea:', error);
-                this.errorMessageID = '⚠️ No se encontró la tarea con el ID proporcionado.';
-                this.selectedTask = null;
-                setTimeout(() => this.clearErrorMessage(), 4000);
-            },
-            complete: () => {
-                inputElement.value = ''; // ✅ Limpia el input después de la búsqueda
-            }
-        });
-    }
 
-    //cancelar la edición
-    clearTaskByID() {
-        this.selectedTask = null; // Oculta el formulario y limpia el estado
-    }
-
-    // Consultar tareas por status
-    getTasksByStatus(status: string) {
-        this.taskService.getTasksByStatus(status).subscribe({
-            next: (tasks) => {
-                console.log(`🟢 Tareas con estado ${status}:`, tasks);
-                this.tasks = tasks;
-            },
-            error: (error) => {
-                console.error(`🔴 Error al filtrar por ${status}:`, error);
-            }
-        });
-    }
-
-    filterTasks() {
-        if (this.statusFilter) {
-            const normalizedStatus = this.statusFilter.toLowerCase(); // O ajusta según sea necesario
-            this.getTasksByStatus(normalizedStatus);
+        // Intenta buscar por ID (si es un número)
+        const potentialId = Number(term);
+        if (!isNaN(potentialId) && potentialId > 0) {
+             console.log(`🔎 Buscando por ID: ${potentialId}`);
+             this.taskService.getTaskById(potentialId).subscribe({
+                 next: (task) => {
+                     console.log('✅ Tarea encontrada por ID:', task);
+                     this.selectedTask = task; // Muestra solo esta tarea
+                     this.tasks = []; // Oculta la lista principal
+                 },
+                 error: (error: HttpErrorResponse) => { // Tipado opcional
+                    console.error('❌ Error al buscar por ID:', error);
+                    if (error.status === 404) {
+                         this.searchError = `No se encontró tarea con ID ${potentialId}.`;
+                    } else {
+                        this.searchError = 'Error al buscar la tarea por ID.';
+                    }
+                    this.tasks = [...this.allTasks]; // Muestra todas si hay error
+                 }
+             });
         } else {
-            this.loadTasks();
+            // Intenta filtrar por Estado (comparación insensible a mayúsculas)
+            const upperTerm = term.toUpperCase();
+            const isValidStatus = this.taskStatuses.includes(upperTerm as TaskStatus);
+
+            if (isValidStatus) {
+                 console.log(`🔎 Filtrando por Estado: ${upperTerm}`);
+                 this.tasks = this.allTasks.filter(task => task.status.toUpperCase() === upperTerm);
+                 if (this.tasks.length === 0) {
+                     this.searchError = `No hay tareas con el estado "${term}".`;
+                 }
+            } else {
+                // Ni ID válido ni Estado válido
+                console.log(`⚠️ Término no reconocido: ${term}`);
+                this.searchError = `"${term}" no es un ID válido ni un estado reconocido.`;
+                this.tasks = [...this.allTasks]; // Muestra todas
+            }
         }
     }
+
+     // Nuevo: Método para mostrar todas las tareas
+    resetSearch() {
+        this.searchTerm = '';
+        this.selectedTask = null;
+        this.searchError = '';
+        this.tasks = [...this.allTasks]; // Restaura la lista completa
+         console.log("🔄 Búsqueda reseteada. Mostrando todas las tareas.");
+    }
+
 
     // Métodos para manejar el cambio de fecha (¡MUY IMPORTANTE!)
     onDueDateChange(event: any): void {
@@ -248,8 +277,6 @@ export class TaskListComponent implements OnInit {
             this.editingTask.dueDate = event ? new Date(event) : new Date();
         }
     }
-
-    showForm: boolean = false;
 
     toggleForm() {
         this.showForm = !this.showForm;
