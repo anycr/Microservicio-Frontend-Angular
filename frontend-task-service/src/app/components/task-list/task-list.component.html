@@ -34,8 +34,8 @@
 <div class="search-filter-section">
 	<h2>Buscar / Filtrar Tareas</h2>
   <div class="filter-controls">
-    <label for="searchTerm">🔎 Buscar por ID o Estado:</label>
-		<input type="text" id="searchTerm" [(ngModel)]="searchTerm" placeholder="ID o Estado (ej: PENDIENTE)">
+    <label for="searchTerm">🔎 Buscar por ID o Estado o Usuario Asignado:</label>
+		<input type="text" id="searchTerm" [(ngModel)]="searchTerm" placeholder="ID o Estado (ej: PENDIENTE) o Usuario">
 		<button (click)="searchOrFilter()">Buscar / Filtrar</button>
 		<button (click)="resetSearch()">Mostrar Todos</button> 
   </div>		

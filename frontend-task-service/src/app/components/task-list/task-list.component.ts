@@ -31,12 +31,12 @@ export class TaskListComponent implements OnInit {
     assignedUser: string = '';
     taskStatuses = Object.values(TaskStatus); // ¡Asegúrate de tener esto!
     selectedTask: Task | null = null;
+    assignUsernames: { [taskId: number]: string } = {}; // Para inputs de asignar usuario por tarea
     searchTerm: string = '';         // Nuevo: Término de búsqueda/filtro
     searchError: string = '';      // ✅ Mensaje de error para la búsqueda
     successMessage: string = '';    // ✅ Mensaje de éxito
     errorMessageCrear: string = '';      // ✅ Mensaje de error Crear
     errorMessageEditar: string = '';      // ✅ Mensaje de error Editar
-    assignUsernames: { [taskId: number]: string } = {};
     showForm: boolean = false;        // Controla visibilidad del form de creación
     
     // Declara ViewChild para obtener la referencia al div del formulario de edición
@@ -173,6 +173,8 @@ export class TaskListComponent implements OnInit {
         }
     } 
 
+    
+
     // Método para limpiar el mensaje manualmente si es necesario
     clearErrorMessage() {
         this.errorMessageEditar = '';
@@ -201,6 +203,14 @@ export class TaskListComponent implements OnInit {
 
     //Asignar la tarea
     assignTask(taskId: number, username: string): void { //Ya es number
+        if (taskId === undefined) {
+            console.error("Intento de asignar tarea con ID indefinido");
+            return;
+        }
+       if (!username || username.trim() === '') {
+           alert("Por favor, introduce un nombre de usuario para asignar.");
+           return;
+       }
         this.taskService.assignTask(taskId, username).subscribe({
             next: (updatedTask: Task) => {
                 const index = this.allTasks.findIndex(t => t.id === updatedTask.id);
@@ -214,69 +224,90 @@ export class TaskListComponent implements OnInit {
                     this.assignUsernames[taskId] = '';
                 }
             },
-            error: (error: any) => console.error('❌ Error assigning task:', error)
+            error: (error: HttpErrorResponse) => { // Tipado específico
+                console.error('❌ Error assigning task:', error);
+                if (error.status === 400 && error.error?.message) {
+                    // Muestra el mensaje específico del backend para errores 400
+                    alert(`⚠️ Error al asignar: ${error.error.message}`); // Usa alert() o una propiedad de error
+                } else if (error.status === 404 && error.error?.message) {
+                    alert(`⚠️ ${error.error.message}`); // Muestra mensaje de 'No encontrado'
+                } else {
+                    // Mensaje genérico para otros errores
+                    alert('⚠️ No se pudo asignar la tarea. Error desconocido.');
+                }
+           }
         });
     }
 
-    searchOrFilter() {
-        this.selectedTask = null; // Limpia selección previa
-        this.searchError = '';    // Limpia error previo
-        const term = this.searchTerm.trim();
-
-        if (!term) {
-            this.resetSearch(); // Si no hay término, muestra todo
-            return;
-        }
-
-        // Intenta buscar por ID (si es un número)
-        const potentialId = Number(term);
-        if (!isNaN(potentialId) && potentialId > 0) {
-             console.log(`🔎 Buscando por ID: ${potentialId}`);
-             this.taskService.getTaskById(potentialId).subscribe({
-                 next: (task) => {
-                     console.log('✅ Tarea encontrada por ID:', task);
-                     this.selectedTask = task; // Muestra solo esta tarea
-                     this.tasks = []; // Oculta la lista principal
-                 },
-                 error: (error: HttpErrorResponse) => { // Tipado opcional
-                    console.error('❌ Error al buscar por ID:', error);
-                    if (error.status === 404) {
-                         this.searchError = `❌ No se encontró tarea con ID ${potentialId}.`;
-                    } else {
-                        this.searchError = '❌ Error al buscar la tarea por ID.';
-                    }
-                    this.tasks = [...this.allTasks]; // Muestra todas si hay error
-                 }
-             });
-        } else {
-            // Intenta filtrar por Estado (comparación insensible a mayúsculas)
+ 
+        searchOrFilter() {
+            this.selectedTask = null;
+            this.searchError = '';
+            const term = this.searchTerm.trim();
+    
+            if (!term) {
+                this.resetSearch();
+                return;
+            }
+    
+            const potentialId = Number(term);
             const upperTerm = term.toUpperCase();
             const isValidStatus = this.taskStatuses.includes(upperTerm as TaskStatus);
-
-            if (isValidStatus) {
-                 console.log(`🔎 Filtrando por Estado: ${upperTerm}`);
-                 this.tasks = this.allTasks.filter(task => task.status.toUpperCase() === upperTerm);
-                 if (this.tasks.length === 0) {
-                     this.searchError = `No hay tareas con el estado "${term}".`;
-                 }
+    
+            if (!isNaN(potentialId) && potentialId > 0) {
+                // Búsqueda por ID
+                 console.log(`🔎 Buscando por ID: ${potentialId}`);
+                 this.taskService.getTaskById(potentialId).subscribe({
+                     next: (task) => {
+                         console.log('✅ Tarea encontrada por ID:', task);
+                         this.selectedTask = task;
+                         this.tasks = []; // Oculta la lista
+                     },
+                     error: (error: HttpErrorResponse) => {
+                        console.error('❌ Error al buscar por ID:', error);
+                        if (error.status === 404) {
+                             this.searchError = `No se encontró tarea con ID ${potentialId}.`;
+                        } else {
+                            this.searchError = 'Error al buscar la tarea por ID.';
+                        }
+                        this.tasks = [...this.allTasks]; // Muestra todas si hay error
+                     }
+                 });
+            } else if (isValidStatus) {
+                // Filtro por Estado (Frontend)
+                console.log(`🔎 Filtrando por Estado: ${upperTerm}`);
+                this.tasks = this.allTasks.filter(task => task.status.toUpperCase() === upperTerm);
+                if (this.tasks.length === 0) {
+                    this.searchError = `No hay tareas con el estado "${term}".`;
+                }
             } else {
-                // Ni ID válido ni Estado válido
-                console.log(`⚠️ Término no reconocido: ${term}`);
-                this.searchError = `"${term}" no es un ID válido ni un estado reconocido.`;
-                this.tasks = [...this.allTasks]; // Muestra todas
+                // Búsqueda por Usuario Asignado (Backend)
+                console.log(`🔎 Buscando por Usuario Asignado: ${term}`);
+                this.taskService.getTasksByAssignedUser(term).subscribe({
+                     next: (tasks: Task[]) => {
+                        console.log(`✅ Tareas encontradas para usuario ${term}:`, tasks);
+                        this.tasks = tasks;
+                        if (this.tasks.length === 0) {
+                           this.searchError = `No se encontraron tareas asignadas a "${term}".`;
+                         }
+                     },
+                     error: (error: HttpErrorResponse) => {
+                        console.error(`❌ Error al buscar por usuario ${term}:`, error);
+                        this.searchError = `Error al buscar tareas para el usuario "${term}".`;
+                        this.tasks = [...this.allTasks]; // Muestra todas si hay error
+                     }
+                 });
             }
         }
-    }
-
-     // Nuevo: Método para mostrar todas las tareas
-    resetSearch() {
-        this.searchTerm = '';
-        this.selectedTask = null;
-        this.searchError = '';
-        this.tasks = [...this.allTasks]; // Restaura la lista completa
-         console.log("🔄 Búsqueda reseteada. Mostrando todas las tareas.");
-    }
-
+    
+    
+        resetSearch() {
+            this.searchTerm = '';
+            this.selectedTask = null;
+            this.searchError = '';
+            this.tasks = [...this.allTasks];
+             console.log("🔄 Búsqueda reseteada. Mostrando todas las tareas.");
+        }
 
     // Métodos para manejar el cambio de fecha (¡MUY IMPORTANTE!)
     onDueDateChange(event: any): void {

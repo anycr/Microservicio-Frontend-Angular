@@ -62,6 +62,19 @@ export class TaskService {
         return this.http.get<Task[]>(`${this.apiUrl}/status/${status}`, { headers });
     }
 
+    //Obtener una Tarea por usuario asignado
+    getTasksByAssignedUser(username: string): Observable<Task[]> {
+        const headers = this.getHeaders();
+        return this.http.get<any[]>(`${this.apiUrl}/assigned/${username}`, { headers }) // Llama al nuevo endpoint
+            .pipe(
+                map(tasks => tasks.map(task => ({ // Convierte fechas en la respuesta
+                    ...task,
+                    startDate: task.startDate ? new Date(task.startDate) : undefined,
+                    dueDate: task.dueDate ? new Date(task.dueDate) : undefined
+                })))
+            );
+    }
+
     private getHeaders(): HttpHeaders {
         let headers = new HttpHeaders();
         const token = localStorage.getItem('token');
