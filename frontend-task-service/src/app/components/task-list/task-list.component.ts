@@ -5,6 +5,8 @@ import { TaskStatus } from '../../models/task-status.enum';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'; // ¡Añade HttpErrorResponse aquí!
+import { ViewChild } from '@angular/core';
+import { ElementRef } from '@angular/core';
 
 @Component({
     selector: 'app-task-list',
@@ -30,15 +32,15 @@ export class TaskListComponent implements OnInit {
     taskStatuses = Object.values(TaskStatus); // ¡Asegúrate de tener esto!
     selectedTask: Task | null = null;
     searchTerm: string = '';         // Nuevo: Término de búsqueda/filtro
-    searchError: string = '';      // Nuevo: Mensaje de error para la búsqueda
+    searchError: string = '';      // ✅ Mensaje de error para la búsqueda
     successMessage: string = '';    // ✅ Mensaje de éxito
     errorMessageCrear: string = '';      // ✅ Mensaje de error Crear
     errorMessageEditar: string = '';      // ✅ Mensaje de error Editar
-    errorMessageID: string = '';      // ✅ Mensaje de error ID
     assignUsernames: { [taskId: number]: string } = {};
     showForm: boolean = false;        // Controla visibilidad del form de creación
     
-
+    // Declara ViewChild para obtener la referencia al div del formulario de edición
+    @ViewChild('editFormDiv') editFormElement: ElementRef | undefined; // Puede ser undefined al inicio
 
     constructor(private taskService: TaskService) { }
 
@@ -117,6 +119,15 @@ export class TaskListComponent implements OnInit {
     
     editTask(task: Task) {
         this.editingTask = { ...task, dueDate: task.dueDate ? new Date(task.dueDate) : undefined }; 
+        // 2. Espera un instante para que Angular renderice el div y luego haz scroll
+        setTimeout(() => {
+            if (this.editFormElement) { // Verifica si el elemento ya existe en el DOM
+                this.editFormElement.nativeElement.scrollIntoView({
+                    behavior: 'smooth', // Scroll suave
+                    block: 'start'      // Alinea la parte superior del div con la parte superior de la vista
+                });
+            }
+        }, 0); // Timeout 0 ejecuta el código después del ciclo de detección de cambios actual
     }
    
     //Actualizar la tarea
@@ -166,7 +177,7 @@ export class TaskListComponent implements OnInit {
     clearErrorMessage() {
         this.errorMessageEditar = '';
         this.errorMessageCrear = '';
-        this.errorMessageID = '';
+        this.searchError = '';
     }
  
     //cancelar la edición
@@ -230,9 +241,9 @@ export class TaskListComponent implements OnInit {
                  error: (error: HttpErrorResponse) => { // Tipado opcional
                     console.error('❌ Error al buscar por ID:', error);
                     if (error.status === 404) {
-                         this.searchError = `No se encontró tarea con ID ${potentialId}.`;
+                         this.searchError = `❌ No se encontró tarea con ID ${potentialId}.`;
                     } else {
-                        this.searchError = 'Error al buscar la tarea por ID.';
+                        this.searchError = '❌ Error al buscar la tarea por ID.';
                     }
                     this.tasks = [...this.allTasks]; // Muestra todas si hay error
                  }

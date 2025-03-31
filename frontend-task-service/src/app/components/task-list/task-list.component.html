@@ -17,27 +17,36 @@
     </label><br>
     <label>Asignado a: <input type="text" [(ngModel)]="newTask.assignedTo"></label><br>
     <button (click)="createTask()">Crear Tarea</button>
+	<!-- Mensaje de Éxito -->
+	<div *ngIf="successMessage" class="success-message">
+		<p>{{ successMessage }}</p>
+		<button (click)="clearSuccessMessage()">Cerrar</button>
+	</div>
+	<!-- Mensaje de Error -->
+	<div *ngIf="errorMessageCrear" class="error-message">
+		<p>{{ errorMessageCrear }}</p>
+		<button (click)="clearErrorMessage()">Cerrar</button>
+	</div>
 </div>
 <br>
 <br>
-
-<!-- Mensaje de Éxito -->
-<div *ngIf="successMessage" class="success-message">
-    <p>{{ successMessage }}</p>
-    <button (click)="clearSuccessMessage()">Cerrar</button>
-</div>
-<!-- Mensaje de Error -->
-<div *ngIf="errorMessageCrear" class="error-message">
-    <p>{{ errorMessageCrear }}</p>
-    <button (click)="clearErrorMessage()">Cerrar</button>
-</div>
 
 <div class="search-filter-section">
-    <label for="searchTerm">Buscar por ID o Estado:</label>
-    <input type="text" id="searchTerm" [(ngModel)]="searchTerm" placeholder="ID o Estado (ej: PENDIENTE)">
-    <button (click)="searchOrFilter()">Buscar / Filtrar</button>
-    <button (click)="resetSearch()">Mostrar Todos</button> </div>
-  
+	<h2>Buscar / Filtrar Tareas</h2>
+  <div class="filter-controls">
+    <label for="searchTerm">🔎 Buscar por ID o Estado:</label>
+		<input type="text" id="searchTerm" [(ngModel)]="searchTerm" placeholder="ID o Estado (ej: PENDIENTE)">
+		<button (click)="searchOrFilter()">Buscar / Filtrar</button>
+		<button (click)="resetSearch()">Mostrar Todos</button> 
+  </div>		
+	<div *ngIf="searchError" class="error-message">
+        <p>{{ searchError }}</p>
+        <button (click)="clearErrorMessage()">Cerrar</button>
+    </div>
+</div>
+ 
+<div class="card">
+  <h2>Lista de Tareas</h2>
   <table class="task-table">
     <thead>
       <tr>
@@ -121,8 +130,9 @@
       </ng-container>
     </tbody>
   </table>
+ </div>
 
-<div *ngIf="editingTask" style="margin-top: 20px;">
+<div *ngIf="editingTask" style="margin-top: 20px;"  class="edit-form card" #editFormDiv>
     <h2>Editar Tarea</h2>
     <label>Título: <input type="text" [(ngModel)]="editingTask.title"></label><br>
     <label>Descripción: <input type="text" [(ngModel)]="editingTask.description"></label><br>
@@ -141,20 +151,13 @@
 
     <!-- Botón de Cancelar -->
     <button (click)="cancelEdit()" class="btn btn-danger" style="margin-left: 10px;">Cancelar</button>
+	<!-- Mensaje de Error -->
+	<div *ngIf="errorMessageEditar" class="error-message">
+		<p>{{ errorMessageEditar }}</p>
+		<button (click)="clearErrorMessage()">Cerrar</button>
+	</div>
 </div>
-
-<!-- Mensaje de Error -->
-<div *ngIf="errorMessageEditar" class="error-message">
-    <p>{{ errorMessageEditar }}</p>
-    <button (click)="clearErrorMessage()">Cerrar</button>
-</div>
-
 
 <div>
      <br>
-</div>
-
-<div *ngIf="errorMessageID" class="error-message">
-    <p>{{ errorMessageID }}</p>
-    <button (click)="clearErrorMessage()">Cerrar</button>
 </div>

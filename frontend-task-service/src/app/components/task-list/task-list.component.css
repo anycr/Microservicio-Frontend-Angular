@@ -299,8 +299,8 @@ label {
   margin-bottom: 25px;
   display: flex;
   align-items: center;
-  gap: 10px; /* Espacio entre elementos */
-  padding: 15px;
+  gap: 15px; /* Espacio entre elementos */
+  padding: 20px;
   background-color: #fff; /* Fondo blanco para destacarlo */
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
@@ -328,6 +328,9 @@ label {
 /* Estilo específico para el botón "Mostrar Todos" */
 .search-filter-section button:last-of-type {
     background-color: #6c757d; /* Gris secundario */
+    margin-top: 10px;
+    margin-left: 10px;
+
 }
 .search-filter-section button:last-of-type:hover {
     background-color: #5a6268;
