@@ -1,10 +1,10 @@
 // src/app/components/register/register.component.ts
 import { Component } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
-import { User } from '../../models/user.model';
-import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { FormsModule, NgForm } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { User } from '../../models/user.model';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -12,7 +12,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
   standalone: true,           // ¡Standalone!
-  imports: [CommonModule, FormsModule] // ¡Importa módulos!
+  imports: [CommonModule, FormsModule, RouterModule ] // ¡Importa módulos!
 })
 export class RegisterComponent {
 
