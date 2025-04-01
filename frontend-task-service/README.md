@@ -1,14 +1,17 @@
 # Gestión de Tareas con Angular:
-Este microservicio de gestión de tareas consume una API REST funcional que permite manejar tareas fácilmente. Puedes extenderlo con autenticación, mensajería y más.
+Una API centralizada y eficiente para gestionar todas tus tareas. Permite crear, organizar, asignar y dar seguimiento a tus pendientes de forma sencilla a través de cualquier aplicación conectada. Es la base para construir potentes herramientas de productividad, con la posibilidad de añadir seguridad avanzada y notificaciones en el futuro.
 
+Microservicio Spring Boot que implementa una API REST para la entidad "Task". Utiliza Spring Data JPA para la persistencia de datos (probablemente con PostgreSQL), Spring Web para los controladores REST y, opcionalmente, Spring Security para la protección de endpoints (con posible integración JWT). La API sigue convenciones REST estándar y devuelve respuestas JSON. Está preparado para ser consumido por aplicaciones cliente como un frontend Angular, gestionando las operaciones básicas de un sistema de tareas y permitiendo futuras ampliaciones.
 ### 📌 ️ Tecnologías Utilizadas:
 ```
-Java 21
-Spring Boot 3
-Spring Data JPA (para la interacción con PostgreSQL)
-Spring Web (para la API REST)
-Docker (para contenerizar la aplicación y la base de datos)
-JWT  para autenticación
+Angular 11.2.0,
+TypeScript,
+Componentes Standalone,
+Plantillas HTML,
+Servicios,
+HttpClientModule y HttpClient,
+Enrutamiento,
+CSS
 ```
 
 ### 📌 Estructura del Proyecto:
