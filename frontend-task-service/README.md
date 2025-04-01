@@ -1,59 +1,66 @@
-# FrontendTaskService
+# Gestión de Tareas con Angular:
+Este microservicio de gestión de tareas consume una API REST funcional que permite manejar tareas fácilmente. Puedes extenderlo con autenticación, mensajería y más.
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.3.
-
-## Development server
-
-To start a local development server, run:
-
-```bash
-ng serve
+### 📌 ️ Tecnologías Utilizadas:
+```
+Java 21
+Spring Boot 3
+Spring Data JPA (para la interacción con PostgreSQL)
+Spring Web (para la API REST)
+Docker (para contenerizar la aplicación y la base de datos)
+JWT  para autenticación
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+### 📌 Estructura del Proyecto:
 ```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
+ 📂 MICROSERVICIO-FRONTEND-ANGULAR
+ ┣ 📂 frontend-task-service  # Carpeta para la aplicación Angular
+ ┃ ┣ 📂 images
+ ┃ ┃ ┗ 📄 fondo-Login.jpg
+ ┃ ┣ 📂 src ( Código fuente de Angula)
+ ┃ ┃ ┣ 📂 app
+ ┃ ┃ ┃ ┣ 📂 components 
+ ┃ ┃ ┃ ┃ ┣ 📂 login (Componente para logearse o iniciar sesión)
+ ┃ ┃ ┃ ┃ ┃ ┣ 📄 login.component.css 
+ ┃ ┃ ┃ ┃ ┃ ┣ 📄 login.component.html  
+ ┃ ┃ ┃ ┃ ┃ ┗ 📄 login.component.ts  
+ ┃ ┃ ┃ ┃ ┣ 📂 register (Componente para el registro de usuarios)
+ ┃ ┃ ┃ ┃ ┃ ┣ 📄 register.component.css 
+ ┃ ┃ ┃ ┃ ┃ ┣ 📄 register.component.html 
+ ┃ ┃ ┃ ┃ ┃ ┗ 📄 register.component.ts 
+ ┃ ┃ ┃ ┃ ┗ 📂 task-list  (Componente para Gestionar las Tareas)
+ ┃ ┃ ┃ ┃   ┣ 📄 task-list.component.css 
+ ┃ ┃ ┃ ┃   ┣ 📄 task-list.component.html 
+ ┃ ┃ ┃ ┃   ┗ 📄 task-list.component.ts   
+ ┃ ┃ ┃ ┣ 📂 guards (Evitar que un usuario no autenticado pueda acceder a la lista de tareas)
+ ┃ ┃ ┃ ┃ ┗ 📄 user.model.ts  
+ ┃ ┃ ┃ ┣ 📂 models 
+ ┃ ┃ ┃ ┃ ┣ 📄 task-status.enum.ts  (Estados de la tarea)
+ ┃ ┃ ┃ ┃ ┣ 📄 task.model.ts  (Define la estructura de datos de una tarea )
+ ┃ ┃ ┃ ┃ ┗ 📄 user.model.ts  (Define la estructura de datos de un usuario )
+ ┃ ┃ ┃ ┣ 📂 services (servicios para manejar la lógica de negocio y la comunicación con las APIs)
+ ┃ ┃ ┃ ┃ ┣ 📄 auth.service.ts (Servicio de Autenticación: Este servicio se encargará de la lógica de registro, inicio de sesión y manejo del token.)
+ ┃ ┃ ┃ ┃ ┗ 📄 task.service.ts (Encapsula la lógica para comunicarse con API de tareas)
+ ┃ ┃ ┃ ┣ 📄 app.component.css
+ ┃ ┃ ┃ ┣ 📄 app.component.html 
+ ┃ ┃ ┃ ┣ 📄 app.component.ts  (Usar el servicio en un componente)
+ ┃ ┃ ┃ ┣ 📄 app.config.server.ts 
+ ┃ ┃ ┃ ┣ 📄 app.config.ts 
+ ┃ ┃ ┃ ┣ 📄 app.routes.server.ts 
+ ┃ ┃ ┃ ┗ 📄 app.routes.ts  
+ ┃ ┃ ┣ 📂 environments (archivo de entorno)
+ ┃ ┃ ┣ 📄 index.html  
+ ┃ ┃ ┣ 📄 main.server.ts 
+ ┃ ┃ ┣ 📄 main.ts 
+ ┃ ┃ ┣ 📄 server.ts
+ ┃ ┃ ┗ 📄 styles.css
+ ┃ ┣ 📄 angular.json (Configuración del framework)
+ ┃ ┣ 📄 package-lock.json
+ ┃ ┣ 📄 package.json (Configuración del proyecto)
+ ┃ ┣ 📄 proxy.conf.json  (Configurar para evitar problemas con CORS)
+ ┃ ┣ 📄 tsconfig.json
+ ┃ ┣ 📄 tsconfig.app.json
+ ┃ ┣ 📄 tsconfig.spec.json 
+ ┃ ┣ 📄 .gitignore
+ ┃ ┗ 📄 README.md
 ```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

@@ -62,7 +62,7 @@ export class TaskService {
         return this.http.get<Task[]>(`${this.apiUrl}/status/${status}`, { headers });
     }
 
-    //Obtener una Tarea por usuario asignado
+    //Obtener las tareas que tiene un usuario 
     getTasksByAssignedUser(username: string): Observable<Task[]> {
         const headers = this.getHeaders();
         return this.http.get<any[]>(`${this.apiUrl}/assigned/${username}`, { headers }) // Llama al nuevo endpoint

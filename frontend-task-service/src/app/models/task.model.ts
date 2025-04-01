@@ -1,4 +1,3 @@
-// src/app/models/task.model.ts
 import { TaskStatus } from './task-status.enum';
 
 export interface Task {

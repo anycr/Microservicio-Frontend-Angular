@@ -1,4 +1,3 @@
-/* src/app/components/login/login.component.css */
 :host {
     display: flex; /* Usa flexbox para centrar el .login-container */
     justify-content: center;

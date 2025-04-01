@@ -1,4 +1,3 @@
-// src/app/models/user.model.ts
 export interface User {
     id?: number; // El id puede ser opcional al crear un usuario
     username: string;
