@@ -1,7 +1,7 @@
 # Gestión de Tareas con Angular:
-Una API centralizada y eficiente para gestionar todas tus tareas. Permite crear, organizar, asignar y dar seguimiento a tus pendientes de forma sencilla a través de cualquier aplicación conectada. Es la base para construir potentes herramientas de productividad, con la posibilidad de añadir seguridad avanzada y notificaciones en el futuro.
+  Una API centralizada y eficiente para gestionar todas tus tareas. Permite crear, organizar, asignar y dar seguimiento a tus pendientes de forma sencilla a través de cualquier aplicación conectada. Es la base para construir potentes herramientas de productividad, con la posibilidad de añadir seguridad avanzada y notificaciones en el futuro.
 
-Microservicio Spring Boot que implementa una API REST para la entidad "Task". Utiliza Spring Data JPA para la persistencia de datos con PostgreSQL, Spring Web para los controladores REST y, opcionalmente, Spring Security para la protección de endpoints (con posible integración JWT) (https://github.com/anycr/Microservicio-BackendJava-SpringBoot). La API sigue convenciones REST estándar y devuelve respuestas JSON. Está preparado para ser consumido por aplicaciones cliente como un frontend Angular, gestionando las operaciones básicas de un sistema de tareas y permitiendo futuras ampliaciones.
+  Microservicio Spring Boot que implementa una API REST para la entidad "Task". Utiliza Spring Data JPA para la persistencia de datos con PostgreSQL, Spring Web para los controladores REST y, opcionalmente, Spring Security para la protección de endpoints (con posible integración JWT) (https://github.com/anycr/Microservicio-BackendJava-SpringBoot). La API sigue convenciones REST estándar y devuelve respuestas JSON. Está preparado para ser consumido por aplicaciones cliente como un frontend Angular, gestionando las operaciones básicas de un sistema de tareas y permitiendo futuras ampliaciones.
 ### 
 
 📌 ️ Tecnologías Utilizadas:
@@ -68,4 +68,17 @@ CSS
  ┃ ┣ 📄 tsconfig.spec.json 
  ┃ ┗ 📄 .gitignore
  ┗ 📄 README.md
+```
+### 📌 Desplegar el Proyecto:
+✅ 1. Desplegar el servicio "https://github.com/anycr/Microservicio-BackendJava-SpringBoot", Nota: seguir el README de este repositorio
+
+✅ 2. Descargar este proyecto
+
+✅ 3. Abre la terminal y ve a la carpeta del proyecto:
+```
+cd /ruta/del/proyecto
+```
+✅ 4. Levantar el frontend:
+```
+npm start
 ```
