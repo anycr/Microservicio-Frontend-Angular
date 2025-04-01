@@ -19,6 +19,7 @@ export class AuthService {
   }
 
   register(user: User): Observable<any> { //Si usas el modelo, pon el tipo.
+    console.log("Enviando datos de registro:", user); 
     return this.http.post(`${this.apiUrl}/register`, user);
   }
 
