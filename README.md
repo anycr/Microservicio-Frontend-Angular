@@ -80,5 +80,6 @@ cd /ruta/del/proyecto
 ```
 ✅ 4. Levantar el frontend:
 ```
+npm install
 npm start
 ```
