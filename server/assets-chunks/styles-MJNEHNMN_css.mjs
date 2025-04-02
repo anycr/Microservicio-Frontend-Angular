@@ -1,0 +1,2 @@
+export default `body,html{height:100%;font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;display:flex;flex-direction:column;justify-content:flex-start;min-height:100vh}header{background-color:#000;color:#fff;padding:20px;text-align:center;width:100%;position:fixed;top:0;left:0;z-index:1000}footer{background-color:#000;color:#fff;padding:10px;text-align:center;position:fixed;bottom:0;left:0;width:100%;margin-top:20px}
+`;
