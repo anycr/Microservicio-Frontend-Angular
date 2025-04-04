@@ -14,6 +14,6 @@ export default `<!doctype html>
   <app-root></app-root>
    <!-- Pie de página -->
    <footer>Realizado por: Annya Corrales</footer>
-<script src="polyfills-FFHMD2TL.js" type="module"></script><script src="main-FRABE6BW.js" type="module"></script></body>
+<script src="polyfills-FFHMD2TL.js" type="module"></script><script src="main-CR3G7ODE.js" type="module"></script></body>
 </html>
 `;
