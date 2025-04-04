@@ -6,7 +6,7 @@
 
 📌 ️ Tecnologías Utilizadas:
 ```
-Angular 11.2.0,
+Angular 19.2.4,
 TypeScript,
 Componentes Standalone,
 Plantillas HTML,
@@ -14,6 +14,7 @@ Servicios,
 HttpClientModule y HttpClient,
 Enrutamiento,
 CSS
+Note.js v22.14.0
 ```
 
 ### 📌 Estructura del Proyecto:
@@ -70,6 +71,7 @@ CSS
  ┗ 📄 README.md
 ```
 ### 📌 Desplegar el Proyecto:
+### Nota: tener instalado Node.js y Angular
 ✅ 1. Desplegar el servicio "https://github.com/anycr/Microservicio-BackendJava-SpringBoot", Nota: seguir el README de este repositorio
 
 ✅ 2. Descargar este proyecto
