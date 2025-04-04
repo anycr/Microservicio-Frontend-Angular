@@ -74,7 +74,18 @@ Note.js v22.14.0
 ### Nota: tener instalado Node.js y Angular
 ✅ 1. Desplegar el servicio "https://github.com/anycr/Microservicio-BackendJava-SpringBoot", Nota: seguir el README de este repositorio
 
-✅ 2. Descargar este proyecto
+✅ 2. Descargar este repositorio
+
+Usa el comando cd para moverte a la carpeta en tu computadora donde quieres que se descargue el repositorio:
+```
+cd C:\Users\tu_usuario\Documents\Proyectos
+# o en macOS/Linux:
+cd ~/Documents/Proyectos
+```
+Ejecuta el comando git clone: Pega la URL que copiaste después del comando:
+```
+git clone https://github.com/nombre-usuario/nombre-repositorio.git
+```
 
 ✅ 3. Abre la terminal y ve a la carpeta del proyecto:
 ```
