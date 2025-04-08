@@ -86,7 +86,6 @@ Ejecuta el comando git clone: Pega la URL que copiaste después del comando:
 ```
 git clone https://github.com/nombre-usuario/nombre-repositorio.git
 ```
-
 ✅ 3. Abre la terminal y ve a la carpeta del proyecto:
 ```
 cd /ruta/del/proyecto
@@ -96,3 +95,5 @@ cd /ruta/del/proyecto
 npm install
 npm start
 ```
+
+### Igualmente, se puede probar en el siguiente enlace (https://anycr.github.io/Microservicio-Frontend-Angular/). Si el servicio ha estado inactivo durante mucho tiempo, puede tardar hasta 8 minutos en volver a funcionar.
